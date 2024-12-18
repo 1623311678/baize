@@ -5,7 +5,7 @@ export class Report {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column('text')
   message: string;
 
   @Column('text')
@@ -13,6 +13,9 @@ export class Report {
 
   @Column()
   url: string;
+
+  @Column()
+  type: string;
 
   @Column()
   userAgent: string;

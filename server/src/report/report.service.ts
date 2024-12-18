@@ -10,8 +10,16 @@ export class ReportService {
     private reportRepository: Repository<Report>,
   ) {}
   // 查询所有错误报告
-  async findAll(): Promise<Report[]> {
-    return this.reportRepository.find();
+
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Report[]; total: number }> {
+    const [data, total] = await this.reportRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return { data, total };
   }
   async handleReport(report: Partial<Report>) {
     console.log('Received error report:', report);

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import * as bodyParser from 'body-parser';
 
 import * as cors from 'cors';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
@@ -24,6 +25,9 @@ async function bootstrap() {
   const httpPort = configServiceIns.get('ORDER_SERVICE_PORT_HTTP');
   // 设置全局路由前缀
   appHttp.setGlobalPrefix('api');
+  // 增加请求体大小限制
+  appHttp.use(bodyParser.json({ limit: '10mb' })); // JSON请求体限制
+  appHttp.use(bodyParser.urlencoded({ limit: '10mb', extended: true })); // URL编码请求体限
   // JWT  全局守卫
   // 使用全局守卫
   const jwtAuthGuard = appHttp.get(JwtAuthGuard);

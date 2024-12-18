@@ -16,7 +16,11 @@ const Header = () => {
         height: 80,
         background: "black",
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        position:'fixed',
+        width:'100%',
+        top:0,
+        zIndex:999
       }}>
       <div>
         <img

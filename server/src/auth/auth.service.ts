@@ -16,8 +16,8 @@ export class AuthService {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
+  async validateUser(userName: string, pass: string): Promise<any> {
+    const user = await this.userService.findOne(userName);
     if (user && (await bcrypt.compare(pass, user.password))) {
       const { password, ...result } = user;
       return result;
@@ -26,13 +26,13 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { userName: user.username, sub: user.userId };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
   async generateToken(user: any): Promise<string> {
-    const payload = { username: user.userName, sub: user.id };
+    const payload = { userName: user.userName, sub: user.id };
     return this.jwtService.sign(payload);
   }
 }

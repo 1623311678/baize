@@ -11,6 +11,8 @@ const getData = async (url: string) => {
 };
 
 const postData = async (url: string,data: any) => {
+  const token = localStorage.getItem('token'); // 替换为实际获取Token的逻
+  if(token){
   try {
     const response = await axiosInstance.post(url,data);
     return response.data;
@@ -18,6 +20,7 @@ const postData = async (url: string,data: any) => {
     console.error("Error posting data:", error);
     throw error;
   }
+}
 };
 
 export { getData, postData };

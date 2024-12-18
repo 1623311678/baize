@@ -10,6 +10,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ReportModule } from './report/report.module';
+import { PageViewModule } from './page-view/page-view.module';
+import { UserViewModule } from './user-view/user-view.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +36,8 @@ import { ReportModule } from './report/report.module';
     UserModule,
     AuthModule,
     ReportModule,
+    PageViewModule,
+    UserViewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

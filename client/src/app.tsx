@@ -7,10 +7,11 @@ import LayoutHeader from "@src/components/Header"
 import store from "./store"
 import { Provider, useSelector } from "react-redux"
 import Login from "./pages/Login"
-import MonitoringSDK from '@hun-dun/monitor-sdk'
+import MonitoringSDK from "@hun-dun/monitor-sdk"
 import "normalize.css"
 import "./app.less"
-new MonitoringSDK('http://localhost:3001/api/report');
+const Monitor = new MonitoringSDK({domain:"http://localhost:3001"})
+window.Monitor = Monitor
 const App: FC = () => {
   const token = useSelector((state: any) => {
     return state.userInfo.token
@@ -18,13 +19,14 @@ const App: FC = () => {
   if (token) {
     return (
       <BrowserRouter>
-        <LayoutHeader />
-        <div style={{ display: "flex"}}>
-          <LayoutMenu />
-          <div style={{height:'80vh',overflow:'auto',width:'calc(100% - 300px)' }}>
-          <LayoutRouter></LayoutRouter>
+        <div className="main-layout">
+          <LayoutHeader />
+          <div  className="main-content">
+            <LayoutMenu />
+            <div  className="content">
+              <LayoutRouter></LayoutRouter>
+            </div>
           </div>
-
         </div>
       </BrowserRouter>
     )

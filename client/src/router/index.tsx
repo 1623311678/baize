@@ -28,7 +28,13 @@ const JsErrorPage = lazy(() =>
   import(/* webpackChunkName: "JsErrorPage" */ "@src/pages/jsError")
 )
 const ActionsPage = lazy(() =>
-  import(/* webpackChunkName: "JsErrorPage" */ "@src/pages/Actions")
+  import(/* webpackChunkName: "ActionPage" */ "@src/pages/Actions")
+)
+const PvPage = lazy(() =>
+  import(/* webpackChunkName: "PvPage" */ "@src/pages/pv")
+)
+const UvPage = lazy(() =>
+  import(/* webpackChunkName: "UvPage" */ "@src/pages/UV")
 )
 
 const routes = [
@@ -40,6 +46,8 @@ const routes = [
   { path: "/users/app2", component: Users2 },
   { path: "/js-error", component: JsErrorPage },
   { path: "/actions", component: ActionsPage },
+  { path: "/pv", component: PvPage },
+  { path: "/uv", component: UvPage },
 ]
 function AppRouter() {
   return (

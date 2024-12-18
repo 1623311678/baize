@@ -11,7 +11,7 @@ var axiosInstance = axios_1.default.create({
 // 请求拦截器
 axiosInstance.interceptors.request.use(function (config) {
     // 从某个地方获取Token，例如从本地存储或上下文
-    var token = localStorage.getItem('token'); // 替换为实际获取Token的逻辑
+    var token = localStorage.getItem('token'); // 替换为实际获取Token的逻
     if (token) {
         config.headers.Authorization = "Bearer ".concat(token);
     }

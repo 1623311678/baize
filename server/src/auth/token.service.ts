@@ -9,8 +9,6 @@ export class TokenService {
   }
 
   isBlacklisted(token: string): boolean {
-    console.log('token', this.tokenBlacklist);
-    console.log('ctoken', token);
     return this.tokenBlacklist.has(token);
   }
 }

@@ -3,60 +3,39 @@ import { Table, Button, Tag, Card, Pagination } from "antd"
 import { post, get, uploadFile } from "@src/api/request"
 import apiMap from "@src/api/apiMap"
 
-const JsErrorPage = () => {
+const UvPage = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
-  const [total, setTotal] = useState(10)
+  const [total, setTotal] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id"
-    },
     {
       title: "url",
       dataIndex: "url",
       key: "url"
     },
     {
-      title: "type",
-      dataIndex: "type",
-      key: "type"
-    },
-    {
-      title: "message",
-      dataIndex: "message",
-      key: "message"
-    },
-    {
-      title: "stack",
-      dataIndex: "stack",
-      key: "stack"
+      title: "count",
+      dataIndex: "count",
+      key: "count"
     },
     {
       title: "userAgent",
       dataIndex: "userAgent",
       key: "userAgent"
-    },
-    {
-      title: "timestamp",
-      dataIndex: "timestamp",
-      key: "timestamp"
     }
   ]
   const getList = (page = 1, limit = 10) => {
     setLoading(true)
-    get(apiMap["getJsReportList"], { page, limit })
+    get(apiMap["totalUv"], { date:'2024-12-18' })
       .then((res: any) => {
-        setData(res?.list)
-        setTotal(res?.total || 10)
-        setCurrentPage(page)
+    
+        setTotal(res || 0)
       })
       .catch(err => {
-        console.log(err)
-        setData([])
-        setCurrentPage(1)
+        // console.log(err)
+        // setData([])
+        // setCurrentPage(1)
       })
       .finally(() => {
         setLoading(false)
@@ -66,7 +45,7 @@ const JsErrorPage = () => {
     getList()
   }, [])
   return (
-    <Card title="js异常" style={{ margin: 30 }}>
+    <Card title="UV信息" style={{ margin: 30, width: "80vw" }}>
       <div>
         <Button
           type="primary"
@@ -75,6 +54,12 @@ const JsErrorPage = () => {
             getList()
           }}>
           查询
+        </Button>
+        <Button
+          type="primary"
+          style={{marginLeft:10}}
+        >
+          总数{total}
         </Button>
       </div>
       <div style={{ maxHeight: "50vh", overflow: "auto", marginBottom: 20 }}>
@@ -101,4 +86,4 @@ const JsErrorPage = () => {
     </Card>
   )
 }
-export default JsErrorPage
+export default UvPage

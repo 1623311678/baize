@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // 从某个地方获取Token，例如从本地存储或上下文
-    const token = localStorage.getItem('token'); // 替换为实际获取Token的逻辑
+    const token = localStorage.getItem('token'); // 替换为实际获取Token的逻
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

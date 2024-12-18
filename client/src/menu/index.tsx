@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react"
 
 import { Menu } from "antd"
-import { AppstoreOutlined,ThunderboltOutlined } from "@ant-design/icons"
+import { AppstoreOutlined,ThunderboltOutlined,PieChartOutlined,AreaChartOutlined } from "@ant-design/icons"
 import { useHistory } from "react-router-dom"
 
 const items = [
@@ -11,9 +11,19 @@ const items = [
     icon: <ThunderboltOutlined />
   },
   {
-    label: "js异常",
+    label: "告警信息",
     key: "js-error",
     icon: <AppstoreOutlined></AppstoreOutlined>
+  },
+  {
+    label: "PV",
+    key: "pv",
+    icon: <PieChartOutlined></PieChartOutlined>
+  },
+  {
+    label: "UV",
+    key: "uv",
+    icon: <AreaChartOutlined />
   },
   {
     label: "菜单",
@@ -91,8 +101,15 @@ const LayoutMenu: FC = () => {
       onClick={handleClick}
       style={{
         width: 256,
+        minWidth: 256,
         height: `calc(100vh - ${80}px)`,
-        background: "#fefefe"
+        background: "#fefefe",
+        position: 'fixed',
+        top: 80,
+        bottom: 0,
+        left: 0,
+        overflow: 'auto',
+        zIndex:999
       }}
       defaultSelectedKeys={[pathName]}
       openKeys={openKeys}

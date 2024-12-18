@@ -11,7 +11,7 @@ import { TokenService } from './token.service';
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'yourSecretKey', // 应该使用环境变量来存储密钥
       signOptions: { expiresIn: '60m' },
@@ -19,6 +19,6 @@ import { TokenService } from './token.service';
   ],
   providers: [AuthService, JwtStrategy, JwtAuthGuard, TokenService],
   controllers: [AuthController],
-  exports: [AuthService, JwtAuthGuard, TokenService], // 确保导出 AuthService
+  exports: [AuthService, JwtAuthGuard, TokenService, JwtModule, PassportModule], // 确保导出 AuthService
 })
 export class AuthModule {}

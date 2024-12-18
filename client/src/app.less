@@ -1,1 +1,27 @@
 @import './theme.less'; // 用于覆盖上面定义的变量
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .layout-header {
+    height: 80px;
+    background-color: #001529;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+  
+  .main-content {
+    display: flex;
+    flex: 1;
+    margin-left: 256px;
+    margin-top: 80px; /* Same as header height */
+  }

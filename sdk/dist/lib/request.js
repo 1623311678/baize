@@ -61,20 +61,24 @@ var getData = function (url) { return __awaiter(void 0, void 0, void 0, function
 }); };
 exports.getData = getData;
 var postData = function (url, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var response, error_2;
+    var token, response, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_instance_1.default.post(url, data)];
+                token = localStorage.getItem('token');
+                if (!token) return [3 /*break*/, 4];
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, axios_instance_1.default.post(url, data)];
+            case 2:
                 response = _a.sent();
                 return [2 /*return*/, response.data];
-            case 2:
+            case 3:
                 error_2 = _a.sent();
                 console.error("Error posting data:", error_2);
                 throw error_2;
-            case 3: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

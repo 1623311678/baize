@@ -3,51 +3,31 @@ import { Table, Button, Tag, Card, Pagination } from "antd"
 import { post, get, uploadFile } from "@src/api/request"
 import apiMap from "@src/api/apiMap"
 
-const JsErrorPage = () => {
+const PvPage = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id"
-    },
-    {
       title: "url",
       dataIndex: "url",
       key: "url"
     },
     {
-      title: "type",
-      dataIndex: "type",
-      key: "type"
-    },
-    {
-      title: "message",
-      dataIndex: "message",
-      key: "message"
-    },
-    {
-      title: "stack",
-      dataIndex: "stack",
-      key: "stack"
+      title: "count",
+      dataIndex: "count",
+      key: "count"
     },
     {
       title: "userAgent",
       dataIndex: "userAgent",
       key: "userAgent"
-    },
-    {
-      title: "timestamp",
-      dataIndex: "timestamp",
-      key: "timestamp"
     }
   ]
   const getList = (page = 1, limit = 10) => {
     setLoading(true)
-    get(apiMap["getJsReportList"], { page, limit })
+    get(apiMap["getPvList"], { page, limit })
       .then((res: any) => {
         setData(res?.list)
         setTotal(res?.total || 10)
@@ -66,7 +46,7 @@ const JsErrorPage = () => {
     getList()
   }, [])
   return (
-    <Card title="js异常" style={{ margin: 30 }}>
+    <Card title="PV信息" style={{ margin: 30, width: "80vw" }}>
       <div>
         <Button
           type="primary"
@@ -101,4 +81,4 @@ const JsErrorPage = () => {
     </Card>
   )
 }
-export default JsErrorPage
+export default PvPage
