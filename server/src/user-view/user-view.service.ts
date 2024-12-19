@@ -9,7 +9,17 @@ export class UserViewService {
     @InjectRepository(UserView)
     private readonly userViewRepository: Repository<UserView>,
   ) {}
-
+  async getLastVisitDate(userId: string): Promise<string> {
+    const lastVisit = await this.userViewRepository.findOne({
+      where: { userId },
+      order: { visitTime: 'DESC' },
+    });
+    return lastVisit ? lastVisit.visitTime.toISOString().split('T')[0] : null;
+  }
+  async updateLastVisitDate(userId: string): Promise<void> {
+    // 更新用户的最后访问日期
+    await this.userViewRepository.update({ userId }, { visitTime: new Date() });
+  }
   async recordVisit(
     userId: string,
     pageUrl: string,
@@ -96,5 +106,54 @@ export class UserViewService {
       .getRawOne();
 
     return result.uniqueVisitors;
+  }
+  async getDailyVisitorsList(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<any> {
+    const offset = (page - 1) * limit;
+
+    // 查询每天的独立访客数量
+    const queryBuilder = this.userViewRepository
+      .createQueryBuilder('userView')
+      .select('DATE(userView.visitTime)', 'visitDate')
+      .addSelect('COUNT(DISTINCT userView.userId)', 'uniqueVisitors')
+      .groupBy('visitDate')
+      .orderBy('visitDate', 'DESC')
+      .offset(offset)
+      .limit(limit);
+
+    const result = await queryBuilder.getRawMany();
+
+    // 查询总记录数（不带分页）
+    const totalQueryBuilder = this.userViewRepository
+      .createQueryBuilder('userView')
+      .select('DATE(userView.visitTime)', 'visitDate')
+      .addSelect('COUNT(DISTINCT userView.userId)', 'uniqueVisitors')
+      .groupBy('visitDate');
+
+    const totalResult = await totalQueryBuilder.getRawMany();
+    const total = totalResult.length;
+
+    return {
+      total,
+      page,
+      limit,
+      data: result,
+    };
+  }
+  // 获取指定天数内的活跃用户数量
+  async getActiveUsers(days: number): Promise<number> {
+    const dateAgo = new Date();
+    dateAgo.setDate(dateAgo.getDate() - days);
+
+    const activeUsers = await this.userViewRepository
+      .createQueryBuilder('userView')
+      .select('userId')
+      .distinct(true)
+      .where('visitTime >= :date', { date: dateAgo })
+      .getCount();
+
+    return activeUsers;
   }
 }

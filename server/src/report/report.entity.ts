@@ -17,6 +17,9 @@ export class Report {
   @Column()
   type: string;
 
+  @Column({ nullable: true })
+  level: string;
+
   @Column()
   userAgent: string;
 

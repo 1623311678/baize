@@ -56,6 +56,46 @@ const ActionsPage = () => {
         }}>
         静态资源
       </Button>
+
+      <Button
+        style={style}
+        type="primary"
+        onClick={() => {
+          const monitor: any = window.Monitor
+          monitor.report({
+            message: "自定义上报信息",
+            type: "javascript",
+            level: "info"
+          })
+        }}>
+        自定义上报信息
+      </Button>
+      <Button
+        style={style}
+        type="primary"
+        onClick={() => {
+          const monitor: any = window.Monitor
+          monitor.report({
+            message: "自定义上报异常",
+            type: "javascript",
+            level: "warn"
+          })
+        }}>
+        自定义上报异常
+      </Button>
+      <Button
+        style={style}
+        type="primary"
+        onClick={() => {
+          const monitor: any = window.Monitor
+          monitor.report({
+            message: "自定义上报警告",
+            type: "javascript",
+            level: "error"
+          })
+        }}>
+        自定义上报警告
+      </Button>
     </Card>
   )
 }

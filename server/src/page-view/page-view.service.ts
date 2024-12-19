@@ -11,11 +11,41 @@ export class PageViewService {
   ) {}
 
   async update(pageViewDto: any) {
-    const { url, userId = 'unKnow' } = pageViewDto;
+    const { url, userId = 'unKnow', lcp, fcp, loadTime } = pageViewDto;
     const pageView = await this.pageViewRepository.findOne({ where: { url } });
     if (pageView) {
       pageView.count += 1;
       pageView.userId = userId;
+      // 处理没有字段的历史数据
+      if (!pageView.lcp) {
+        pageView.lcp = lcp;
+      }
+      if (!pageView.fcp) {
+        pageView.fcp = fcp;
+      }
+      if (!pageView.loadTime) {
+        pageView.loadTime = loadTime;
+      }
+
+      // 计算新的平均 LCP 和 FCP
+      if (lcp !== undefined) {
+        pageView.lcp = parseInt(
+          String((pageView.lcp * (pageView.count - 1) + lcp) / pageView.count),
+        );
+      }
+      if (fcp !== undefined) {
+        pageView.fcp = parseInt(
+          String((pageView.fcp * (pageView.count - 1) + fcp) / pageView.count),
+        );
+      }
+      if (loadTime !== undefined) {
+        pageView.loadTime = parseInt(
+          String(
+            (pageView.loadTime * (pageView.count - 1) + loadTime) /
+              pageView.count,
+          ),
+        );
+      }
       const res = await this.pageViewRepository.save(pageView);
       return res;
     } else {

@@ -9,6 +9,7 @@ interface ErrorReport {
   userAgent: string;
   timestamp: string;
   type: string;
+  level?:string
 }
 interface Options {
   domain: string;
@@ -31,11 +32,10 @@ class MonitoringSDK {
     this.endpoint = `${this.domain}/api/report`;
     this.pvApi = `${this.domain}/api/pv`;
     this.originalConsoleError = console.error; // 保存原始的 console.error 方法
-    //pv
     this.init();
   }
   public report(options: ReportOptions) {
-    const { message, type = "javascript", level } = options;
+    const { message, type = "javascript", level='error' } = options;
     const poyload = {
       message,
       stack: "",
@@ -43,6 +43,7 @@ class MonitoringSDK {
       userAgent: navigator.userAgent,
       timestamp: new Date().toISOString(),
       type: type,
+      level
     };
     postData(this.endpoint, poyload);
   }
@@ -59,6 +60,13 @@ class MonitoringSDK {
   }
   private handleUv() {
     document.addEventListener("DOMContentLoaded", () => {
+      recordDailyVisit({ api: `${this.domain}/api/user-view/record` });
+    });
+    // 监听popstate事件
+    window.addEventListener("popstate", (e) => {
+      recordDailyVisit({ api: `${this.domain}/api/user-view/record` });
+    });
+    window.addEventListener("hashchange", () => {
       recordDailyVisit({ api: `${this.domain}/api/user-view/record` });
     });
   }
@@ -183,6 +191,7 @@ class MonitoringSDK {
       await this.reportError(errorReport);
     }
   }
+  // pv上报，包含lcp、fcp
   private trackPageView() {
     let url = "";
     const pWin: any = window;
@@ -191,17 +200,44 @@ class MonitoringSDK {
     } else {
       url = `${window.location.origin}${window.location.pathname}`;
     }
-    const pageViewReport = {
-      type: "pageview",
-      message: "Page viewed",
-      stack: "",
-      url,
-      userAgent: navigator.userAgent,
-      timestamp: new Date().toISOString(),
-    };
 
-    // 上报PV信息
-    this.reportPageView(pageViewReport);
+    let lcp: number, fcp: number; // 初始化 LCP 和 FCP
+    // 创建一个 PerformanceObserver 实例
+    const observer = new PerformanceObserver((list) => {
+      const entries = list.getEntries();
+      for (const entry of entries) {
+        if (
+          entry.entryType === "paint" &&
+          entry.name === "first-contentful-paint"
+        ) {
+          fcp = entry.startTime;
+        } else if (entry.entryType === "largest-contentful-paint") {
+          lcp = entry.startTime;
+        }
+      }
+    });
+
+    // 开始监听 FCP 和 LCP
+    observer.observe({ type: "paint", buffered: true });
+    observer.observe({ type: "largest-contentful-paint", buffered: true });
+    setTimeout(() => {
+      const loadTime =
+      window.performance.timing.loadEventEnd -
+      window.performance.timing.navigationStart;
+      const pageViewReport = {
+        type: "pageview",
+        message: "Page viewed",
+        stack: "",
+        loadTime: parseInt(String(loadTime)),
+        lcp: parseInt(String(lcp)),
+        fcp: parseInt(String(fcp)),
+        url,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+      };
+      // 上报PV信息
+      this.reportPageView(pageViewReport);
+    }, 2000);
   }
 
   private async reportPageView(pageViewReport: any) {
@@ -213,6 +249,9 @@ class MonitoringSDK {
   }
   private async reportError(errorReport: ErrorReport) {
     try {
+      if(!errorReport.level){
+        errorReport.level = 'error'
+      }
       await postData(this.endpoint, errorReport);
     } catch (error) {
       // console.error("Failed to report error:", error);

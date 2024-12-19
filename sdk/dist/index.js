@@ -45,11 +45,10 @@ var MonitoringSDK = /** @class */ (function () {
         this.endpoint = "".concat(this.domain, "/api/report");
         this.pvApi = "".concat(this.domain, "/api/pv");
         this.originalConsoleError = console.error; // 保存原始的 console.error 方法
-        //pv
         this.init();
     }
     MonitoringSDK.prototype.report = function (options) {
-        var message = options.message, _a = options.type, type = _a === void 0 ? "javascript" : _a, level = options.level;
+        var message = options.message, _a = options.type, type = _a === void 0 ? "javascript" : _a, _b = options.level, level = _b === void 0 ? 'error' : _b;
         var poyload = {
             message: message,
             stack: "",
@@ -57,6 +56,7 @@ var MonitoringSDK = /** @class */ (function () {
             userAgent: navigator.userAgent,
             timestamp: new Date().toISOString(),
             type: type,
+            level: level
         };
         (0, request_1.postData)(this.endpoint, poyload);
     };
@@ -71,6 +71,13 @@ var MonitoringSDK = /** @class */ (function () {
     MonitoringSDK.prototype.handleUv = function () {
         var _this = this;
         document.addEventListener("DOMContentLoaded", function () {
+            (0, uv_1.recordDailyVisit)({ api: "".concat(_this.domain, "/api/user-view/record") });
+        });
+        // 监听popstate事件
+        window.addEventListener("popstate", function (e) {
+            (0, uv_1.recordDailyVisit)({ api: "".concat(_this.domain, "/api/user-view/record") });
+        });
+        window.addEventListener("hashchange", function () {
             (0, uv_1.recordDailyVisit)({ api: "".concat(_this.domain, "/api/user-view/record") });
         });
     };
@@ -229,7 +236,9 @@ var MonitoringSDK = /** @class */ (function () {
             });
         });
     };
+    // pv上报，包含lcp、fcp
     MonitoringSDK.prototype.trackPageView = function () {
+        var _this = this;
         var url = "";
         var pWin = window;
         if (pWin.location.hash) {
@@ -238,16 +247,41 @@ var MonitoringSDK = /** @class */ (function () {
         else {
             url = "".concat(window.location.origin).concat(window.location.pathname);
         }
-        var pageViewReport = {
-            type: "pageview",
-            message: "Page viewed",
-            stack: "",
-            url: url,
-            userAgent: navigator.userAgent,
-            timestamp: new Date().toISOString(),
-        };
-        // 上报PV信息
-        this.reportPageView(pageViewReport);
+        var lcp, fcp; // 初始化 LCP 和 FCP
+        // 创建一个 PerformanceObserver 实例
+        var observer = new PerformanceObserver(function (list) {
+            var entries = list.getEntries();
+            for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                var entry = entries_1[_i];
+                if (entry.entryType === "paint" &&
+                    entry.name === "first-contentful-paint") {
+                    fcp = entry.startTime;
+                }
+                else if (entry.entryType === "largest-contentful-paint") {
+                    lcp = entry.startTime;
+                }
+            }
+        });
+        // 开始监听 FCP 和 LCP
+        observer.observe({ type: "paint", buffered: true });
+        observer.observe({ type: "largest-contentful-paint", buffered: true });
+        setTimeout(function () {
+            var loadTime = window.performance.timing.loadEventEnd -
+                window.performance.timing.navigationStart;
+            var pageViewReport = {
+                type: "pageview",
+                message: "Page viewed",
+                stack: "",
+                loadTime: parseInt(String(loadTime)),
+                lcp: parseInt(String(lcp)),
+                fcp: parseInt(String(fcp)),
+                url: url,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+            };
+            // 上报PV信息
+            _this.reportPageView(pageViewReport);
+        }, 2000);
     };
     MonitoringSDK.prototype.reportPageView = function (pageViewReport) {
         return __awaiter(this, void 0, void 0, function () {
@@ -275,6 +309,9 @@ var MonitoringSDK = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
+                        if (!errorReport.level) {
+                            errorReport.level = 'error';
+                        }
                         return [4 /*yield*/, (0, request_1.postData)(this.endpoint, errorReport)];
                     case 1:
                         _a.sent();

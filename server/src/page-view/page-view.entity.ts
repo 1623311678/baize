@@ -28,4 +28,16 @@ export class PageView {
 
   @Column()
   userAgent: string;
+
+  @Column({ nullable: true })
+  level: string;
+
+  @Column({ type: 'int', nullable: true })
+  loadTime: number; // 新增字段，记录页面加载时间
+
+  @Column({ type: 'int', nullable: true })
+  lcp: number; // Largest Contentful Paint
+
+  @Column({ type: 'int', nullable: true })
+  fcp: number; // First Contentful Paint
 }

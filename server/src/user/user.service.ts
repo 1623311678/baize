@@ -31,4 +31,9 @@ export class UserService {
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
+
+  // 新增获取用户总数的方法
+  async count(): Promise<number> {
+    return this.usersRepository.count();
+  }
 }

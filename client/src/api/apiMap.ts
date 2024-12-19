@@ -9,5 +9,8 @@ const apiMap = {
   getPvList: `${domain}/pv/list`,
   uvStatistics: `${domain}/user-view/statistics`,
   totalUv: `${domain}/user-view/daily-unique-visitors`,
+  daliyUVList: `${domain}/user-view/daily-visitors-list`,
+  getAllUserCounts: `${domain}/users/count`,
+  getActiveUsersCounts: `${domain}/user-view/active-users`,
 }
 export default apiMap

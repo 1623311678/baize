@@ -22,30 +22,19 @@ function generateUUID() {
         return v.toString(16);
     });
 }
-function getTodayDate() {
-    var today = new Date();
-    return today.toISOString().split("T")[0]; // YYYY-MM-DD
-}
 function recordDailyVisit(options) {
     var api = options.api;
     var userId = getUserIdentifier();
-    var today = getTodayDate();
-    var lastVisitDate = localStorage.getItem("lastVisitDate");
-    // 如果今天还没有记录过访问
-    if (lastVisitDate !== today) {
-        var pageUrl = window.location.href;
-        // 发送请求记录访问
-        (0, request_1.postData)(api, {
-            pageUrl: pageUrl,
-            userId: userId,
-        })
-            .then(function (response) {
-            console.log("Daily visit recorded:", response.data);
-            // 更新最后访问日期
-            localStorage.setItem("lastVisitDate", today);
-        })
-            .catch(function (error) {
-            console.error("Error recording daily visit:", error);
-        });
-    }
+    var pageUrl = window.location.href;
+    // 发送请求记录访问
+    (0, request_1.postData)(api, {
+        pageUrl: pageUrl,
+        userId: userId,
+    })
+        .then(function (response) {
+        console.log("Daily visit recorded:", response.data);
+    })
+        .catch(function (error) {
+        console.error("Error recording daily visit:", error);
+    });
 }

@@ -10,19 +10,35 @@ const PvPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const columns = [
     {
-      title: "url",
+      title: "页面链接",
       dataIndex: "url",
       key: "url"
     },
     {
-      title: "count",
+      title: "访问量",
       dataIndex: "count",
       key: "count"
     },
     {
-      title: "userAgent",
+      title: "平均FCP(ms)",
+      dataIndex: "fcp",
+      key: "fcp"
+    },
+    {
+      title: "平均LCP(ms)",
+      dataIndex: "lcp",
+      key: "lcp"
+    },
+    {
+      title: "平均加载时间(ms)",
+      dataIndex: "loadTime",
+      key: "loadTime"
+    },
+    {
+      title: "用户设备",
       dataIndex: "userAgent",
-      key: "userAgent"
+      key: "userAgent",
+      width:300,
     }
   ]
   const getList = (page = 1, limit = 10) => {

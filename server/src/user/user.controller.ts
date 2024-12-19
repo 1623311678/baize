@@ -7,6 +7,7 @@ import {
   Param,
   Put,
   Delete,
+  Query
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { UserService } from './user.service';
@@ -96,4 +97,16 @@ export class UserController {
       message: 'User deleted successfully',
     };
   }
+
+  @Get('count')
+  async getUserCount(): Promise<any> {
+    const total = await this.userService.count();
+    return {
+      code: 200,
+      success: true,
+      message: 'User updated successfully',
+      data: total,
+    };
+  }
+
 }

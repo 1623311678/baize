@@ -25,45 +25,45 @@ const items = [
     key: "uv",
     icon: <AreaChartOutlined />
   },
-  {
-    label: "菜单",
-    key: "menu",
-    icon: <AppstoreOutlined></AppstoreOutlined>,
-    children: [
-      {
-        label: "主页",
-        key: "/",
-        parentkey: ["menu"],
-        icon: <AppstoreOutlined></AppstoreOutlined>
-      },
-      {
-        label: "子菜单项1",
-        key: "/about",
-        parentkey: ["menu"],
-        icon: <AppstoreOutlined></AppstoreOutlined>
-      },
-      {
-        label: "子菜单项2",
-        key: "/users",
-        parentkey: ["menu"],
-        icon: <AppstoreOutlined></AppstoreOutlined>,
-        children: [
-          {
-            label: "users1",
-            parentkey: ["menu", "/users"],
-            key: "/users/app1",
-            icon: <AppstoreOutlined></AppstoreOutlined>
-          },
-          {
-            label: "users2",
-            parentkey: ["menu", "/users"],
-            key: "/users/app2",
-            icon: <AppstoreOutlined></AppstoreOutlined>
-          }
-        ]
-      }
-    ]
-  }
+  // {
+  //   label: "菜单",
+  //   key: "menu",
+  //   icon: <AppstoreOutlined></AppstoreOutlined>,
+  //   children: [
+  //     {
+  //       label: "主页",
+  //       key: "/",
+  //       parentkey: ["menu"],
+  //       icon: <AppstoreOutlined></AppstoreOutlined>
+  //     },
+  //     {
+  //       label: "子菜单项1",
+  //       key: "/about",
+  //       parentkey: ["menu"],
+  //       icon: <AppstoreOutlined></AppstoreOutlined>
+  //     },
+  //     {
+  //       label: "子菜单项2",
+  //       key: "/users",
+  //       parentkey: ["menu"],
+  //       icon: <AppstoreOutlined></AppstoreOutlined>,
+  //       children: [
+  //         {
+  //           label: "users1",
+  //           parentkey: ["menu", "/users"],
+  //           key: "/users/app1",
+  //           icon: <AppstoreOutlined></AppstoreOutlined>
+  //         },
+  //         {
+  //           label: "users2",
+  //           parentkey: ["menu", "/users"],
+  //           key: "/users/app2",
+  //           icon: <AppstoreOutlined></AppstoreOutlined>
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // }
 ]
 
 const LayoutMenu: FC = () => {
