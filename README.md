@@ -1,10 +1,10 @@
 # 白泽
 
-一体化前端监控平台
+一体化前端监控平台，包括前端展示、服务端，sdk
 
 ## 如何使用
 
-#### 1. 安装
+#### 1. 安装 sdk
 
 ```shell
 npm install @hun-dun/monitor-sdk
@@ -74,7 +74,7 @@ CREATE DATABASE IF NOT EXISTS monitor;
 
 3. sdk
 
-前端监控 sdk
+前端监控 sdk，自动上报pv uv，异常信息，支持手动上报
 
 
 ### 简单介绍
