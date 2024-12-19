@@ -1,14 +1,17 @@
 {
   "name": "@hun-dun/monitor-sdk",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "wangjunkai03",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.10.2",
